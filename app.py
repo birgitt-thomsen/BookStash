@@ -17,6 +17,13 @@ db.init_app(app)
 # with app.app_context():
 #     db.create_all()
 
+def get_authors():
+    """ Get all authors from the database."""
+    authors = db.session.scalars(
+        db.select(Author).order_by(Author.name)
+    ).all()
+    return authors
+
 @app.route('/add_author', methods=['GET','POST'])
 def add_author():
     """ Add an author to the database."""
@@ -53,6 +60,56 @@ def add_author():
         )
 
     return render_template("add_author.html")
+
+@app.route('/add_book', methods=['GET', 'POST'])
+def add_book():
+    """Add a book to the database."""
+    authors = get_authors()
+
+    if request.method == 'POST':
+        try:
+            # Optional: Check if ISBN already exists
+            existing_book = db.session.scalar(
+                db.select(Book).where(Book.isbn == request.form["isbn"])
+            )
+
+            if existing_book:
+                return render_template(
+                    "add_book.html",
+                    authors=authors,
+                    message="A book with that ISBN already exists."
+                )
+
+            book = Book(
+                author_id=int(request.form["author_id"]),
+                title=request.form["title"],
+                isbn=request.form["isbn"],
+                publication_year=int(request.form["year"])
+            )
+
+            db.session.add(book)
+            db.session.commit()
+
+            message = f"{book.title} added successfully!"
+
+        except ValueError:
+            message = "Please enter a valid publication year."
+
+        except SQLAlchemyError:
+            db.session.rollback()
+            message = "An error occurred while saving the book."
+
+        return render_template(
+            "add_book.html",
+            authors=authors,
+            message=message
+        )
+
+    return render_template(
+        "add_book.html",
+        authors=authors
+    )
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
