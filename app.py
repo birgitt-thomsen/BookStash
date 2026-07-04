@@ -1,7 +1,7 @@
 """ This file contains flask app routes to handle GET and POST requests. """
 import os
 from datetime import datetime
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 from sqlalchemy.exc import SQLAlchemyError
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
@@ -188,6 +188,36 @@ def add_book():
         "add_book.html",
         authors=authors
     )
+
+@app.route('/book/<int:book_id>/delete', methods=['POST'])
+def delete_book(book_id):
+    """ Delete a book from the database."""
+    book = db.session.get(Book, book_id)
+
+    if book is None:
+        return "Book not found", 404
+
+    title = book.title
+    author_id = book.author_id
+
+    # Delete the book
+    db.session.delete(book)
+    db.session.commit()
+
+    # Check if the author has any books left
+    remaining_books = db.session.scalar(
+        db.select(db.func.count())
+        .select_from(Book)
+        .where(Book.author_id == author_id)
+    )
+
+    if remaining_books == 0:
+        author = db.session.get(Author, author_id)
+        db.session.delete(author)
+        db.session.commit()
+
+    return redirect(
+        url_for("index", message=f'"{title}" was deleted successfully!'))
 
 
 if __name__ == "__main__":
