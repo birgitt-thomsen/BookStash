@@ -45,6 +45,18 @@ def add_author():
     """ Add an author to the database."""
     if request.method == 'POST':
         try:
+            # Check if author already exists in database
+            existing = db.session.scalar(
+                db.select(Author).where(Author.name == request.form["name"])
+            )
+
+            if existing:
+                return render_template(
+                    "add_author.html",
+                    message=f"{request.form["name"]} already exists in "
+                            f"database."
+                )
+
             death_date = request.form["date_of_death"]
 
             author = Author(
@@ -84,7 +96,7 @@ def add_book():
 
     if request.method == 'POST':
         try:
-            # Optional: Check if ISBN already exists
+            # Check if ISBN already exists
             existing_book = db.session.scalar(
                 db.select(Book).where(Book.isbn == request.form["isbn"])
             )
