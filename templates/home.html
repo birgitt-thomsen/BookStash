@@ -10,11 +10,18 @@
 
     <table>
         <tr>
+            <th>Cover</th>
             <th>Title</th>
             <th>Author</th>
         </tr>
         {% for book, author in books %}
         <tr>
+            <td>
+              <img
+                  src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+                  width="90"
+                  alt="{{ book.title }}">
+            </td>
             <td>{{ book.title }}</td>
             <td>{{ author.name }}</td>
         </tr>
