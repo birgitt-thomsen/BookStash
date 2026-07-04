@@ -7,11 +7,18 @@
   </head>
   <body>
     <h1>Book Stash</h1>
-    {% for book in books %}
-        <div>
-            <h3>{{ book.title }}</h3>
-        </div>
-    {% endfor %}
 
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+        </tr>
+        {% for book, author in books %}
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ author.name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
   </body>
 </html>

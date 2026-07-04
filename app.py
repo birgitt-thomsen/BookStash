@@ -26,10 +26,12 @@ def get_authors():
 
 def get_books():
     """ Get all books and authors from the database."""
-    return db.session.scalars(
-        db.select(Book)
+    books= db.session.execute(
+        db.select(Book, Author)
+        .join(Author, Book.author_id == Author.id)
         .order_by(Book.title)
     ).all()
+    return books
 
 @app.route('/', methods=['GET'])
 def index():
