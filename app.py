@@ -108,10 +108,18 @@ def add_book():
                     message="A book with that ISBN already exists."
                 )
 
+            # Check if year is valid
+            year = int(request.form["year"])
+
+            if year < 0 or year > datetime.now().year:
+                raise ValueError
+
+            isbn = request.form["isbn"].strip() or None
+
             book = Book(
                 author_id=int(request.form["author_id"]),
-                title=request.form["title"],
-                isbn=request.form["isbn"],
+                title=request.form["title"].strip(),
+                isbn=isbn,
                 publication_year=int(request.form["year"])
             )
 

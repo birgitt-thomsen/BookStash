@@ -13,17 +13,27 @@
             <th>Cover</th>
             <th>Title</th>
             <th>Author</th>
+            <th>Published</th>
         </tr>
         {% for book, author in books %}
+
         <tr>
             <td>
-              <img
-                  src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
-                  width="90"
-                  alt="{{ book.title }}">
+            {% if book.isbn %}
+                <img
+                    src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+                    width="90"
+                    alt="{{ book.title }}">
+            {% else %}
+                <img
+                    src="{{ url_for('static', filename='images/no_cover.png') }}"
+                    width="90"
+                    alt="No cover available">
+            {% endif %}
             </td>
             <td>{{ book.title }}</td>
             <td>{{ author.name }}</td>
+            <td>{{ book.publication_year }}</td>
         </tr>
         {% endfor %}
     </table>
