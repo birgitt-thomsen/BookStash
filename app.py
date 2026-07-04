@@ -24,21 +24,33 @@ def get_authors():
     ).all()
     return authors
 
-def get_books():
+def get_books(sort="title"):
     """ Get all books and authors from the database."""
-    books= db.session.execute(
+    query = (
         db.select(Book, Author)
         .join(Author, Book.author_id == Author.id)
-        .order_by(Book.title)
-    ).all()
-    return books
+    )
+
+    if sort == "author":
+        query = query.order_by(Author.name)
+
+    elif sort == "year":
+        query = query.order_by(Book.publication_year)
+
+    else:
+        query = query.order_by(Book.title)
+
+    return db.session.execute(query).all()
 
 @app.route('/', methods=['GET'])
 def index():
-    """ Display the main page."""
-    books = get_books()
+    """ Display the main page with sorting options."""
+    sort = request.args.get("sort", "title")
+
+    books = get_books(sort)
     return render_template("home.html",
-                           books=books)
+                           books=books,
+                           sort=sort)
 
 @app.route('/add_author', methods=['GET','POST'])
 def add_author():

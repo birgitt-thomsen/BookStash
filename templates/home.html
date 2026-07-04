@@ -10,10 +10,10 @@
 
     <table>
         <tr>
-            <th>Cover</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Published</th>
+            <th><u>Cover</u></th>
+            <th><a href="{{ url_for('index', sort='title') }}">Title</a></th>
+            <th><a href="{{ url_for('index', sort='author') }}">Author</a></th>
+            <th><a href="{{ url_for('index', sort='year') }}">Published</a></th>
         </tr>
         {% for book, author in books %}
 
