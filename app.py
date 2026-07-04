@@ -24,6 +24,20 @@ def get_authors():
     ).all()
     return authors
 
+def get_books():
+    """ Get all books and authors from the database."""
+    return db.session.scalars(
+        db.select(Book)
+        .order_by(Book.title)
+    ).all()
+
+@app.route('/', methods=['GET'])
+def index():
+    """ Display the main page."""
+    books = get_books()
+    return render_template("home.html",
+                           books=books)
+
 @app.route('/add_author', methods=['GET','POST'])
 def add_author():
     """ Add an author to the database."""
