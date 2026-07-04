@@ -4,12 +4,14 @@ from datetime import datetime
 from flask import Flask, request, render_template
 from sqlalchemy.exc import SQLAlchemyError
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_
 from data_models import db, Author, Book
 
 app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 'data/library.sqlite')}"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 
+                     'data/library.sqlite')}"
 
 db.init_app(app)
 
@@ -24,33 +26,62 @@ def get_authors():
     ).all()
     return authors
 
+
+def apply_sorting(query, sort):
+    """ Apply sorting to query and return a query with sorted results."""
+    if sort == "author":
+        return query.order_by(Author.name)
+    elif sort == "year":
+        return query.order_by(Book.publication_year)
+    return query.order_by(Book.title)
+
+
 def get_books(sort="title"):
-    """ Get all books and authors from the database."""
+    """ Get all book and author info from the database."""
     query = (
         db.select(Book, Author)
         .join(Author, Book.author_id == Author.id)
     )
 
-    if sort == "author":
-        query = query.order_by(Author.name)
+    return db.session.execute(
+        apply_sorting(query, sort)
+    ).all()
 
-    elif sort == "year":
-        query = query.order_by(Book.publication_year)
 
-    else:
-        query = query.order_by(Book.title)
+def search_books(keyword, sort="title"):
+    """ Return a list of books matching the given keyword."""
+    query = (
+        db.select(Book, Author)
+        .join(Author, Book.author_id == Author.id)
+        .where(
+            or_(
+                Book.title.ilike(f"%{keyword}%"),
+                Author.name.ilike(f"%{keyword}%")
+            )
+        )
+    )
 
-    return db.session.execute(query).all()
+    return db.session.execute(
+        apply_sorting(query, sort)
+    ).all()
 
 @app.route('/', methods=['GET'])
 def index():
-    """ Display the main page with sorting options."""
+    """ Display the main page with sorting and search options."""
+    search = request.args.get("search")
     sort = request.args.get("sort", "title")
 
-    books = get_books(sort)
-    return render_template("home.html",
-                           books=books,
-                           sort=sort)
+    if search:
+        books = search_books(search, sort)
+    else:
+        books = get_books(sort)
+
+    return render_template(
+        "home.html",
+        books=books,
+        search=search,
+        sort=sort
+    )
 
 @app.route('/add_author', methods=['GET','POST'])
 def add_author():

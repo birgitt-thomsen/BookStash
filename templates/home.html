@@ -8,12 +8,39 @@
   <body>
     <h1>Book Stash</h1>
 
+    <form class="search-form" action="{{ url_for('index') }}" method="get">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search by author or title..."
+        value="{{ search or '' }}">
+
+    <input type="hidden" name="sort" value="{{ sort }}">
+
+    <button type="submit">Search</button>
+
+    </form>
+
+    {% if not books %}
+        <p>No books matched your search.</p>
+    {% endif %}
+
     <table>
         <tr>
             <th><u>Cover</u></th>
-            <th><a href="{{ url_for('index', sort='title') }}">Title</a></th>
-            <th><a href="{{ url_for('index', sort='author') }}">Author</a></th>
-            <th><a href="{{ url_for('index', sort='year') }}">Published</a></th>
+            <th><a href="{{ url_for('index', search=search, sort='title') }}">
+                Title
+                </a>
+            </th>
+            <th><a href="{{ url_for('index', search=search, sort='author') }}">
+                Author
+                </a>
+            </th>
+            <th><a href="{{ url_for('index', search=search, sort='year') }}">
+                Published
+                </a>
+            </th>
         </tr>
         {% for book, author in books %}
 
