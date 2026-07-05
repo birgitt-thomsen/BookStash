@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
     <h1>Book Stash</h1>
+
+    <nav>
+        <a href="{{ url_for('index') }}">Library</a>
+        <a href="{{ url_for('add_book') }}">Add Book</a>
+        <a href="{{ url_for('add_author') }}">Add Author</a>
+    </nav>
 
     <form class="search-form" action="{{ url_for('index') }}" method="get">
 
@@ -28,19 +36,37 @@
 
     <table>
         <tr>
-            <th><u>Cover</u></th>
-            <th><a href="{{ url_for('index', search=search, sort='title') }}">
-                Title
+            <th>Cover</th>
+            <th>
+                <a href="{{ url_for('index', search=search, sort='title') }}">
+                    Title
+                    {% if sort == "title" %}
+                        ▲
+                    {% else %}
+                        ↕
+                    {% endif %}
                 </a>
             </th>
-            <th><a href="{{ url_for('index', search=search, sort='author') }}">
+            <th>
+                <a href="{{ url_for('index', search=search, sort='author') }}">
                 Author
+                    {% if sort == "author" %}
+                        ▲
+                    {% else %}
+                        ↕
+                    {% endif %}
                 </a>
             </th>
             <th><a href="{{ url_for('index', search=search, sort='year') }}">
                 Published
+                    {% if sort == "year" %}
+                        ▲
+                    {% else %}
+                        ↕
+                    {% endif %}
                 </a>
             </th>
+            <th></th>
         </tr>
         {% for book, author in books %}
 
@@ -65,7 +91,7 @@
                 <form class="delete-form"
                     action="{{ url_for('delete_book', book_id=book.id) }}"
                     method="post">
-                    <button type="submit">Delete</button>
+                    <input class="delete-btn" type="submit" value="Delete">
                 </form>
             </td>
         </tr>

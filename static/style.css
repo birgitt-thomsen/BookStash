@@ -1,0 +1,212 @@
+/* ===== Theme ===== */
+
+:root {
+    --primary: #42297c;
+    --primary-hover: #6f54b8;
+    --background: #f3f4f8;
+    --text: #333;
+    --success: #4f8a10;
+    --border: #ccc;
+    --table-border: #ececec;
+}
+
+/* ===== General ===== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    padding: 40px;
+}
+
+h1 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+}
+
+h2 {
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+/* ===== Forms ===== */
+
+.card-form {
+    background: white;
+    max-width: 650px;
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 1100px;
+    margin: 0 auto 20px;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.search-form input[type="text"] {
+    flex: 1;
+    width: auto;
+    margin: 0;
+}
+
+.delete-form {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+label {
+    display: block;
+    margin-top: 18px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* ===== Buttons ===== */
+
+button,
+input[type="submit"] {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 22px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: .25s;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.search-form button {
+    margin: 0;
+    padding: 12px 24px;
+    white-space: nowrap;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: var(--primary-hover);
+}
+
+.delete-btn {
+    background: #7b7b7b;
+}
+
+.delete-btn:hover {
+    background: #5d5d5d;
+}
+
+/* ===== Table ===== */
+
+table {
+    width: 100%;
+    max-width: 1100px;
+    margin: 40px auto;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+    text-align: center;
+}
+
+th {
+    background: var(--primary);
+    color: white;
+    padding: 18px;
+    text-align: center;
+}
+
+th a {
+    color: white;
+    text-decoration: none;
+}
+
+th a:hover {
+    text-decoration: underline;
+}
+
+td {
+    padding: 16px;
+    border-bottom: 1px solid var(--table-border);
+    vertical-align: middle;
+}
+
+tr:hover {
+    background: #f7f5fc;
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
+/* ===== Messages ===== */
+
+#message {
+    text-align: center;
+    color: var(--success);
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    background: var(--primary);
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: .25s;
+    font-weight: 600;
+}
+
+nav a:hover {
+    background: var(--primary-hover);
+}
