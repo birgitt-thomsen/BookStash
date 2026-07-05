@@ -121,14 +121,6 @@ input[type="submit"]:hover {
     background: var(--primary-hover);
 }
 
-.delete-btn {
-    background: #7b7b7b;
-}
-
-.delete-btn:hover {
-    background: #5d5d5d;
-}
-
 /* ===== Table ===== */
 
 table {
