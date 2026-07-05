@@ -1,17 +1,17 @@
-""" This file contains flask app routes to handle GET and POST requests. """
+""" This file contains flask app routes to handle GET and POST requests to
+show the homepage, add an author, add and delete a book from the database. """
 import os
 from datetime import datetime
 from flask import Flask, request, render_template, redirect, url_for
 from sqlalchemy.exc import SQLAlchemyError
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 from data_models import db, Author, Book
 
 app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 
-                     'data/library.sqlite')}"
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+    f"sqlite:///{os.path.join(basedir,'data/library.sqlite')}"
 
 db.init_app(app)
 
@@ -28,16 +28,18 @@ def get_authors():
 
 
 def apply_sorting(query, sort):
-    """ Apply sorting to query and return a query with sorted results."""
+    """ Apply sorting to query and return the query with sorted results."""
     if sort == "author":
-        return query.order_by(Author.name)
+        sort_order = query.order_by(Author.name)
     elif sort == "year":
-        return query.order_by(Book.publication_year)
-    return query.order_by(Book.title)
+        sort_order = query.order_by(Book.publication_year)
+    else:
+        sort_order = query.order_by(Book.title)
+    return sort_order
 
 
 def get_books(sort="title"):
-    """ Get all book and author info from the database."""
+    """ Get all books, linked to author, from the database."""
     query = (
         db.select(Book, Author)
         .join(Author, Book.author_id == Author.id)
@@ -67,7 +69,7 @@ def search_books(keyword, sort="title"):
 
 @app.route('/', methods=['GET'])
 def index():
-    """ Display the main page with sorting and search options."""
+    """ Display the main page with sorting and search selections."""
     search = request.args.get("search")
     sort = request.args.get("sort", "title")
 
@@ -85,7 +87,8 @@ def index():
 
 @app.route('/add_author', methods=['GET','POST'])
 def add_author():
-    """ Add an author to the database."""
+    """ Add an author to the database. Return message when author already
+    exists in database, date entry is invalid or an error occurred."""
     if request.method == 'POST':
         try:
             # Check if author already exists in database
@@ -116,7 +119,7 @@ def add_author():
             db.session.add(author)
             db.session.commit()
 
-            message = f'{author.name} added successfully!'
+            message = f'{author.name} was added successfully!'
 
         except ValueError:
             message = "Please enter valid dates."
@@ -134,7 +137,8 @@ def add_author():
 
 @app.route('/add_book', methods=['GET', 'POST'])
 def add_book():
-    """Add a book to the database."""
+    """Add a book to the database. Return message when ISBN already
+    exists, publication year is invalid or an error occurred."""
     authors = get_authors()
 
     if request.method == 'POST':
@@ -169,7 +173,7 @@ def add_book():
             db.session.add(book)
             db.session.commit()
 
-            message = f"{book.title} added successfully!"
+            message = f"{book.title} was added successfully!"
 
         except ValueError:
             message = "Please enter a valid publication year."
@@ -191,7 +195,7 @@ def add_book():
 
 @app.route('/book/<int:book_id>/delete', methods=['POST'])
 def delete_book(book_id):
-    """ Delete a book from the database."""
+    """ Delete a book from the database when user clicks button on homepage."""
     book = db.session.get(Book, book_id)
 
     if book is None:
@@ -221,4 +225,4 @@ def delete_book(book_id):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5002)
