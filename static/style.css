@@ -5,6 +5,7 @@
     --primary-hover: #6f54b8;
     --background: #f3f4f8;
     --text: #333;
+    --tagline: #777;
     --success: #4f8a10;
     --border: #ccc;
     --table-border: #ececec;
@@ -35,6 +36,14 @@ h1 {
 h2 {
     color: var(--primary);
     margin-bottom: 20px;
+}
+
+.tagline {
+    text-align: center;
+    color: var(--tagline);
+    margin-top: -20px;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
 }
 
 /* ===== Forms ===== */
